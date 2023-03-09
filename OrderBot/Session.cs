@@ -6,7 +6,7 @@ namespace OrderBot
     {
         private enum State
         {
-            WELCOMING, SIZE, PROTEIN
+            WELCOMING, MOTHERBOARD, PROCESSOR, RAM, STORAGE_SSD, GRAPHICS_CARD, CPU_CASE, OS, MONITOR
         }
 
         private State nCur = State.WELCOMING;
@@ -15,7 +15,7 @@ namespace OrderBot
         public Session(string sPhone)
         {
             this.oOrder = new Order();
-            this.oOrder.Phone = sPhone;
+            // this.oOrder.Phone = sPhone;
         }
 
         public List<String> OnMessage(String sInMessage)
@@ -26,19 +26,29 @@ namespace OrderBot
                 case State.WELCOMING:
                     aMessages.Add("Welcome to PC Assemblers. Lets build your future PC!");
                     aMessages.Add("For starters, which motherboard would you like to install for your desktop?");
-                    this.nCur = State.SIZE;
+                    this.nCur = State.MOTHERBOARD;
                     break;
-                case State.SIZE:
-                    this.oOrder.Size = sInMessage;
-                    this.oOrder.Save();
-                    aMessages.Add("What protein would you like on this  " + this.oOrder.Size + " Shawarama?");
-                    this.nCur = State.PROTEIN;
+                case State.MOTHERBOARD:
+                    this.oOrder.Motherboard = sInMessage;
+                    // this.oOrder.Save();
+                    aMessages.Add("Now, which processor would you like to install in your PC? Be Specific.  " /*+ this.oOrder.Size + " Shawarama?"*/);
+                    this.nCur = State.PROCESSOR;
                     break;
-                case State.PROTEIN:
-                    string sProtein = sInMessage;
-                    aMessages.Add("What toppings would you like on this (1. pickles 2. Tzaki) " + this.oOrder.Size + " " + sProtein + " Shawarama?");
+                case State.PROCESSOR:
+                    this.oOrder.Processor = sInMessage;
+                    aMessages.Add("Now, which RAM would you like to install into this desktop and what is size of the RAM you would like " /*+ this.oOrder.Size + " " + sProtein + " Shawarama?"*/);
+                    this.nCur = State.RAM;
                     break;
-
+                case State.RAM:
+                    this.oOrder.RAM = sInMessage;
+                    aMessages.Add("Which storage SSD would you like to fit into your PC? Mention the size as well.");
+                    this.nCur = State.STORAGE_SSD;
+                    break;
+                case State.STORAGE_SSD:
+                    this.oOrder.Storage = sInMessage;
+                    aMessages.Add("Now which graphics card would you like to install in your desktop? Mention the graphics card size as well.");
+                    this.nCur = State.GRAPHICS_CARD;
+                    break;
 
             }
             aMessages.ForEach(delegate (String sMessage)
