@@ -4,6 +4,17 @@ namespace OrderBot
 {
     public class Order : ISQLModel
     {
+        public String[] motherBoardBrands = {"ASUS TUF GAMING X570-PLUS", "MSI MAG B550 TOMAHAWK", "GigaByte B650 AORUS ELITE AX", "MSI B450-A PRO MAX"};
+        public String[] processorBrands = {"AMD Ryzen 5 5600X", "Intel Core i9-13900K", "Intel Core i7-13700K", "Intel Core i5-13600K", "AMD Ryzen 7 5800X", "AMD Ryzen 9 7950X"};
+        public String[] ramBrands = {"Corsair Vengeance LPX 16 GB", "Silicon Power GAMING 16 GB", "G.Skill Ripjaws S5 32 GB", "Kingston FURY Beast 8 GB"};
+        public String[] storageSSDBrands = {"Samsung 970 Evo Plus 1TB", "Kingston NV2 512GB", "Western Digital Black SN770 2TB", "Crucial P3 1TB"};
+        public String[] graphicsCardBrands = {"GeForce RTX 4070 Ti 12GB", "Radeon RX 6650 XT 8GB", 	"GeForce GTX 1050 Ti 4GB", "GeForce GTX 1660 Ti 6GB"};
+        public String[] cpuCaseBrands = {"HYTE Y60 Gray", "Fractal Design North Black", "Corsair iCUE 4000X RGB White", "NZXT H510 Flow Black"};
+        public String[] os = {"Microsoft Windows 11 Home (64-bit)", "Microsoft Windows 10 Home (64-bit)", "Microsoft Windows 11 Pro (64-bit)", "Microsoft Windows 7 Ultimate SP1 (64-bit)"};
+        public String[] monitorBrands = {"Asus TUF Gaming VG27AQ 165Hz", "HP OMEN X Emperium 65 144Hz", "Samsung Odyssey G7 240Hz", "Dell S2522HG 240Hz"};
+
+
+
         private string _tokenNumber = String.Empty;
         private string _size = String.Empty;
         private string _phone = String.Empty;

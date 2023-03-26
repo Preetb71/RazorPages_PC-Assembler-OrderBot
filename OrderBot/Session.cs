@@ -26,83 +26,223 @@ namespace OrderBot
                 case State.WELCOMING:
                     aMessages.Add("Welcome to PC Assemblers. Lets build your future PC!");
                     aMessages.Add("For starters, which motherboard would you like to install for your desktop?");
+                    aMessages.Add($"1. {this.oOrder.motherBoardBrands[0]}");
+                    aMessages.Add($"2. {this.oOrder.motherBoardBrands[1]}");
+                    aMessages.Add($"3. {this.oOrder.motherBoardBrands[2]}");
+                    aMessages.Add($"4. {this.oOrder.motherBoardBrands[3]}");
+                    aMessages.Add("Please only reply with a number between 1 to 4.");
                     this.nCur = State.MOTHERBOARD;
                     break;
                 case State.MOTHERBOARD:
-                    this.oOrder.Motherboard = sInMessage;
-                    this.oOrder.Save();
-                    aMessages.Add("Now, which processor would you like to install in your PC? Be Specific.  " /*+ this.oOrder.Size + " Shawarama?"*/);
-                    this.nCur = State.PROCESSOR;
-                    break;
-                case State.PROCESSOR:
-                    this.oOrder.Processor = sInMessage;
-                    this.oOrder.Save();
-                    aMessages.Add("Now, which RAM would you like to install into this desktop and what is size of the RAM you would like " /*+ this.oOrder.Size + " " + sProtein + " Shawarama?"*/);
-                    this.nCur = State.RAM;
-                    break;
-                case State.RAM:
-                    this.oOrder.RAM = sInMessage;
-                    this.oOrder.Save();
-                    aMessages.Add("Which storage SSD would you like to fit into your PC? Mention the size as well.");
-                    this.nCur = State.STORAGE_SSD;
-                    break;
-                case State.STORAGE_SSD:
-                    this.oOrder.Storage = sInMessage;
-                    this.oOrder.Save();
-                    aMessages.Add("Now which graphics card would you like to install in your desktop? Mention the graphics card size as well.");
-                    this.nCur = State.GRAPHICS_CARD;
-                    break;
-                case State.GRAPHICS_CARD:
-                    this.oOrder.Graphics = sInMessage;
-                    this.oOrder.Save();
-                    aMessages.Add("Which CPU Case would you like to select for your desktop build?");
-                    this.nCur = State.CPU_CASE;
-                    break;
-                case State.CPU_CASE:
-                    this.oOrder.CPU_Case = sInMessage;
-                    this.oOrder.Save();
-                    aMessages.Add("Which OS would you like to install in your desktop?");
-                    this.nCur = State.OS;
-                    break;
-                case State.OS:
-                    this.oOrder.OS = sInMessage;
-                    this.oOrder.Save();
-                    aMessages.Add("Which monitor would you like to accompany with your cpu? Mention in details.");
-                    this.nCur = State.MONITOR;
-                    break;
-                case State.MONITOR:
-                    this.oOrder.Monitor = sInMessage;
-                    this.oOrder.Save();
-                    aMessages.Add("Would you like to confirm your order? Type 'Y' or 'N' as your response.");
-                    this.nCur = State.CONFIRM_ORDER;    //next state is confirm order state
-                    break;
-                case State.CONFIRM_ORDER:
-                    this.oOrder.ConfirmOrder = sInMessage;
-                    this.oOrder.Save();
-                    if(this.oOrder.ConfirmOrder == "Y" || this.oOrder.ConfirmOrder == "y")
+                    if(int.TryParse(sInMessage, out int itemNumber) && itemNumber <= 4 && itemNumber > 0)   //THIS CONDITION WILL TRY TO PARSE THE RESPONSE OF USER TO SEE IF THEY PASSED A VALID RESPONSE WITH A NUMBER WITHIN THE RANGE OR NOT.
                     {
-                        aMessages.Add("Your order is successfully confirmed!");
-                        aMessages.Add("Here are your custom desktop specifications:");
-                        aMessages.Add($"Token Number: {this.oOrder.TokenNumber}");
-                        aMessages.Add($"Motherboard: {this.oOrder.Motherboard}");
-                        aMessages.Add($"Processor: {this.oOrder.Processor}");
-                        aMessages.Add($"RAM: {this.oOrder.RAM}");
-                        aMessages.Add($"Storage SSD: {this.oOrder.Storage}");
-                        aMessages.Add($"Graphics Card: {this.oOrder.Graphics}");
-                        aMessages.Add($"CPU Case: {this.oOrder.CPU_Case}");
-                        aMessages.Add($"OS: {this.oOrder.OS}");
-                        aMessages.Add($"Monitor: {this.oOrder.Monitor}");
-                        aMessages.Add("Keep the token number safe and show it to the physical store and finish your payment transaction there.");
-                        aMessages.Add("Thank you for building a PC with us!");
+                        this.oOrder.Motherboard = this.oOrder.motherBoardBrands[int.Parse(sInMessage) - 1];
+                        this.oOrder.Save();
+                        aMessages.Add("Now, which processor would you like to install in your PC?");
+                        aMessages.Add($"1. {this.oOrder.processorBrands[0]}");
+                        aMessages.Add($"2. {this.oOrder.processorBrands[1]}");
+                        aMessages.Add($"3. {this.oOrder.processorBrands[2]}");
+                        aMessages.Add($"4. {this.oOrder.processorBrands[3]}");
+                        aMessages.Add($"5. {this.oOrder.processorBrands[4]}");
+                        aMessages.Add($"6. {this.oOrder.processorBrands[5]}");
+                        aMessages.Add("Please only reply with a number between 1 to 6.");
+                        this.nCur = State.PROCESSOR;
+                        break;
                     }
-                    else if(this.oOrder.ConfirmOrder == "N" || this.oOrder.ConfirmOrder == "n")
+                    else    //ELSE IT WILL PROMPT THE USER TO GIVE THE ANSWER AGAIN AND SET THE CURRENT STATE TO THIS STATE AGAIN
                     {
-                        aMessages.Add("You have chosen not to confirm your order. Thank you for using our chat service.");
-                        aMessages.Add("Launch the chat service again, if you would like to build another desktop.");
+                        aMessages.Add("Please enter a valid response as requested!!");
+                        aMessages.Add("Try answering again!!");
+                        this.nCur = State.MOTHERBOARD;
+                        break;
+                    }
+
+                case State.PROCESSOR:
+                    if(int.TryParse(sInMessage, out itemNumber)  && itemNumber <= 6 && itemNumber > 0)
+                    {
+                        this.oOrder.Processor = this.oOrder.processorBrands[int.Parse(sInMessage) - 1];
+                        this.oOrder.Save();
+                        aMessages.Add("Now, which RAM would you like to install into this desktop and what is size of the RAM you would like ");
+                        aMessages.Add($"1. {this.oOrder.ramBrands[0]}");
+                        aMessages.Add($"2. {this.oOrder.ramBrands[1]}");
+                        aMessages.Add($"3. {this.oOrder.ramBrands[2]}");
+                        aMessages.Add($"4. {this.oOrder.ramBrands[3]}");
+                        aMessages.Add("Please only reply with a number between 1 to 4.");
+                        this.nCur = State.RAM;
+                        break;
+                    }
+                    else
+                    {
+                        aMessages.Add("Please enter a valid response as requested!!");
+                        aMessages.Add("Try answering again!!");
+                        this.nCur = State.PROCESSOR;
+                        break;
+                    }
+                case State.RAM:
+                    if(int.TryParse(sInMessage, out itemNumber)  && itemNumber <= 4 && itemNumber > 0)
+                    {
+                        this.oOrder.RAM = this.oOrder.ramBrands[int.Parse(sInMessage) - 1];
+                        this.oOrder.Save();
+                        aMessages.Add("Which storage SSD would you like to fit into your PC? Mention the size as well.");
+                        aMessages.Add($"1. {this.oOrder.storageSSDBrands[0]}");
+                        aMessages.Add($"2. {this.oOrder.storageSSDBrands[1]}");
+                        aMessages.Add($"3. {this.oOrder.storageSSDBrands[2]}");
+                        aMessages.Add($"4. {this.oOrder.storageSSDBrands[3]}");
+                        aMessages.Add("Please only reply with a number between 1 to 4.");
+                        this.nCur = State.STORAGE_SSD;
+                        break;
+                    }
+                    else
+                    {
+                        aMessages.Add("Please enter a valid response as requested!!");
+                        aMessages.Add("Try answering again!!");
+                        this.nCur = State.RAM;
+                        break;
+                    }
+
+                case State.STORAGE_SSD:
+                    if(int.TryParse(sInMessage, out itemNumber)  && itemNumber <= 4 && itemNumber > 0)
+                    {
+                        this.oOrder.Storage = this.oOrder.storageSSDBrands[int.Parse(sInMessage) - 1];
+                        this.oOrder.Save();
+                        aMessages.Add("Now which graphics card would you like to install in your desktop? Mention the graphics card size as well.");
+                        aMessages.Add($"1. {this.oOrder.graphicsCardBrands[0]}");
+                        aMessages.Add($"2. {this.oOrder.graphicsCardBrands[1]}");
+                        aMessages.Add($"3. {this.oOrder.graphicsCardBrands[2]}");
+                        aMessages.Add($"4. {this.oOrder.graphicsCardBrands[3]}");
+                        aMessages.Add("Please only reply with a number between 1 to 4.");
+                        this.nCur = State.GRAPHICS_CARD;
+                        break;
+                    }
+                    else
+                    {
+                        aMessages.Add("Please enter a valid response as requested!!");
+                        aMessages.Add("Try answering again!!");
+                        this.nCur = State.STORAGE_SSD;
+                        break;
+                    }
+                 
+                case State.GRAPHICS_CARD:
+                    if(int.TryParse(sInMessage, out itemNumber)  && itemNumber <= 4 && itemNumber > 0)
+                    {
+                        this.oOrder.Graphics = this.oOrder.graphicsCardBrands[int.Parse(sInMessage) - 1];
+                        this.oOrder.Save();
+                        aMessages.Add("Which CPU Case would you like to select for your desktop build?");
+                        aMessages.Add($"1. {this.oOrder.cpuCaseBrands[0]}");
+                        aMessages.Add($"2. {this.oOrder.cpuCaseBrands[1]}");
+                        aMessages.Add($"3. {this.oOrder.cpuCaseBrands[2]}");
+                        aMessages.Add($"4. {this.oOrder.cpuCaseBrands[3]}");
+                        aMessages.Add("Please only reply with a number between 1 to 4.");
+                        this.nCur = State.CPU_CASE;
+                        break;
+                    }
+                    else
+                    {
+                        aMessages.Add("Please enter a valid response as requested!!");
+                        aMessages.Add("Try answering again!!");
+                        this.nCur = State.GRAPHICS_CARD;
+                        break;
+                    }
+                  
+                case State.CPU_CASE:
+                    if(int.TryParse(sInMessage, out itemNumber)  && itemNumber <= 4 && itemNumber > 0)
+                    {
+                        this.oOrder.CPU_Case = this.oOrder.cpuCaseBrands[int.Parse(sInMessage) - 1];
+                        this.oOrder.Save();
+                        aMessages.Add("Which OS would you like to install in your desktop?");
+                        aMessages.Add($"1. {this.oOrder.os[0]}");
+                        aMessages.Add($"2. {this.oOrder.os[1]}");
+                        aMessages.Add($"3. {this.oOrder.os[2]}");
+                        aMessages.Add($"4. {this.oOrder.os[3]}");
+                        aMessages.Add("Please only reply with a number between 1 to 4.");
+                        this.nCur = State.OS;
+                        break;
+                    }
+                    else
+                    {
+                        aMessages.Add("Please enter a valid response as requested!!");
+                        aMessages.Add("Try answering again!!");
+                        this.nCur = State.CPU_CASE;
+                        break;
+                    }
+                  
+                case State.OS:
+                    if(int.TryParse(sInMessage, out itemNumber)  && itemNumber <= 4 && itemNumber > 0)
+                    {
+                        this.oOrder.OS = this.oOrder.os[int.Parse(sInMessage) - 1];
+                        this.oOrder.Save();
+                        aMessages.Add("Which monitor would you like to accompany with your cpu? Mention in details.");
+                        aMessages.Add($"1. {this.oOrder.monitorBrands[0]}");
+                        aMessages.Add($"2. {this.oOrder.monitorBrands[1]}");
+                        aMessages.Add($"3. {this.oOrder.monitorBrands[2]}");
+                        aMessages.Add($"4. {this.oOrder.monitorBrands[3]}");
+                        aMessages.Add("Please only reply with a number between 1 to 4.");
+                        this.nCur = State.MONITOR;
+                        break;
+                    }
+                    else
+                    {
+                        aMessages.Add("Please enter a valid response as requested!!");
+                        aMessages.Add("Try answering again!!");
+                        this.nCur = State.OS;
+                        break;
+                    }
+                 
+                case State.MONITOR:
+                    if(int.TryParse(sInMessage, out itemNumber)  && itemNumber <= 4 && itemNumber > 0)
+                    {
+                        this.oOrder.Monitor = this.oOrder.monitorBrands[int.Parse(sInMessage) - 1];
+                        this.oOrder.Save();
+                        aMessages.Add("Would you like to confirm your order? Type 'Y' or 'N' as your response.");
+                        this.nCur = State.CONFIRM_ORDER;    //next state is confirm order state
+                        break;
+                    }
+                    else
+                    {
+                        aMessages.Add("Please enter a valid response as requested!!");
+                        aMessages.Add("Try answering again!!");
+                        this.nCur = State.MONITOR;
+                        break;
+                    }
+                  
+                case State.CONFIRM_ORDER:
+                    if(sInMessage.ToLower() == "y" || sInMessage.ToLower() == "n")
+                    {
+                        this.oOrder.ConfirmOrder = sInMessage;
+                        this.oOrder.Save();
+                        if(this.oOrder.ConfirmOrder.ToLower() == "y")
+                        {
+                            aMessages.Add("Your order is successfully confirmed!");
+                            aMessages.Add("Here are your custom desktop specifications:");
+                            aMessages.Add($"Token Number: {this.oOrder.TokenNumber}");
+                            aMessages.Add($"Motherboard: {this.oOrder.Motherboard}");
+                            aMessages.Add($"Processor: {this.oOrder.Processor}");
+                            aMessages.Add($"RAM: {this.oOrder.RAM}");
+                            aMessages.Add($"Storage SSD: {this.oOrder.Storage}");
+                            aMessages.Add($"Graphics Card: {this.oOrder.Graphics}");
+                            aMessages.Add($"CPU Case: {this.oOrder.CPU_Case}");
+                            aMessages.Add($"OS: {this.oOrder.OS}");
+                            aMessages.Add($"Monitor: {this.oOrder.Monitor}");
+                            aMessages.Add("Keep the token number safe and show it to the physical store and finish your payment transaction there.");
+                            aMessages.Add("Thank you for building a PC with us!");
+                        }
+                        else if(this.oOrder.ConfirmOrder.ToLower() == "n")
+                        {
+                            aMessages.Add("You have chosen not to confirm your order. Thank you for using our chat service.");
+                            aMessages.Add("Launch the chat service again, if you would like to build another desktop.");
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        aMessages.Add("Please enter a valid response as requested!!");
+                        aMessages.Add("Try answering again!!");
+                        this.nCur = State.CONFIRM_ORDER;
+                        break;
                     }
                     //PLANNING ON ADDING A LOOP HERE SO WHEN THE CURRENT TRANSACTION IS DONE USER CAN RESET THE SESSION AND BUILD A PC AGAIN.
                     // this.nCur = State.WELCOMING;    //set back to welcome state to order again
-                    break;
+
             }
             aMessages.ForEach(delegate (String sMessage)
             {
