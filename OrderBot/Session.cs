@@ -10,7 +10,7 @@ namespace OrderBot
         }
 
         private State nCur = State.WELCOMING;
-        private Order oOrder;
+        public Order oOrder;    //Made this public from private so that I can access it to run tests
 
         public Session(string sPhone)  
         {

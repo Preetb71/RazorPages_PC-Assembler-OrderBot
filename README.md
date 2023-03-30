@@ -18,7 +18,7 @@ dotnet test
 To test with coverage:
 
 ```
-dotnet test --collect:"XPlat Code Coverage"
+    dotnet test --collect:"XPlat Code Coverage"
 ```
 
 Then to make a report:
