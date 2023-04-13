@@ -6,7 +6,7 @@ namespace OrderBot
     {
         private enum State
         {
-            WELCOMING, MOTHERBOARD, PROCESSOR, RAM, STORAGE_SSD, GRAPHICS_CARD, CPU_CASE, OS, MONITOR, CONFIRM_ORDER
+            WELCOMING, MOTHERBOARD, PROCESSOR, RAM, STORAGE_SSD, GRAPHICS_CARD, CPU_CASE, OS, MONITOR, CONFIRM_ORDER, RESET_ORDER
         }
 
         private State nCur = State.WELCOMING;
@@ -225,11 +225,18 @@ namespace OrderBot
                             aMessages.Add($"Monitor: {this.oOrder.Monitor}");
                             aMessages.Add("Keep the token number safe and show it to the physical store and finish your payment transaction there.");
                             aMessages.Add("Thank you for building a PC with us!");
+                            aMessages.Add("We will now reset the order, so you can use the chat again.");
+                            this.nCur = State.RESET_ORDER;
+                            break;
                         }
                         else if(this.oOrder.ConfirmOrder.ToLower() == "n")
                         {
                             aMessages.Add("You have chosen not to confirm your order. Thank you for using our chat service.");
                             aMessages.Add("Launch the chat service again, if you would like to build another desktop.");
+                            aMessages.Add("We will now reset the order, so you can use the chat again.");
+                            aMessages.Add("Say hello to begin the PC Building process again!");
+                            this.nCur = State.RESET_ORDER;
+                            break;
                         }
                         break;
                     }
@@ -240,9 +247,12 @@ namespace OrderBot
                         this.nCur = State.CONFIRM_ORDER;
                         break;
                     }
-                    //PLANNING ON ADDING A LOOP HERE SO WHEN THE CURRENT TRANSACTION IS DONE USER CAN RESET THE SESSION AND BUILD A PC AGAIN.
-                    // this.nCur = State.WELCOMING;    //set back to welcome state to order again
-
+                //RESETS/CREATES A NEW ORDER AND RESETS BACK TO THE WELCOME STATE.
+                case State.RESET_ORDER:
+                    this.oOrder = new Order();
+                    this.oOrder.TokenNumber = GenerateRandomTokenNumber();
+                    this.nCur = State.WELCOMING;
+                    break;
             }
             aMessages.ForEach(delegate (String sMessage)
             {
